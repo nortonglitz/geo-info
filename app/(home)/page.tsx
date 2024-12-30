@@ -1,6 +1,6 @@
 "use client"
 import { useCallback, useState } from "react"
-import { List } from "./list"
+import { List } from "./List"
 import { debounce } from "@/libs/debounce"
 
 export default function Home() {
