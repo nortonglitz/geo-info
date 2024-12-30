@@ -68,7 +68,7 @@ export const List = ({ query }: IList) => {
         <div className="flex justify-center my-2">
           <Spinner
             thickness={2}
-            size={8}
+            size={6}
           />
         </div>
       )}
