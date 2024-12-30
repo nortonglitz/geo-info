@@ -3,12 +3,13 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { Spinner } from "@/components"
 
 interface IPlace {
-  display_name: string
-  name: string
-  osm_id: string
-  osm_type: string
+  display_name?: string
+  name?: string
+  osm_id?: string
+  osm_type?: string
 }
 
 interface IList {
@@ -17,23 +18,30 @@ interface IList {
 
 export const List = ({ query }: IList) => {
   const [places, setPlaces] = useState<undefined | "error" | IPlace[]>(undefined)
+  const [isLoading, setIsLoading] = useState(false)
 
   const searchQuery = async () => {
-    let res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=jsonv2`)
-
-    if (!res.ok) {
+    try {
+      let res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=jsonv2`)
+      if (!res.ok) {
+        throw new Error("Server unavailable")
+      }
+      const data = await res.json()
+      setPlaces(data)
+    } catch {
       setPlaces("error")
+    } finally {
+      setIsLoading(false)
     }
-
-    const data = await res.json()
-    setPlaces(data)
   }
 
   useEffect(() => {
     if (query && query.length > 2) {
+      setIsLoading(true)
       searchQuery()
     } else {
       setPlaces(undefined)
+      setIsLoading(false)
     }
   }, [query])
 
@@ -41,7 +49,7 @@ export const List = ({ query }: IList) => {
   const isError = places === "error"
   const isEmpty = typeof places === "undefined"
 
-  if (isEmpty) {
+  if (isEmpty && !isLoading) {
     return <></>
   }
 
@@ -56,7 +64,15 @@ export const List = ({ query }: IList) => {
         overflow-hidden
       "
     >
-      {isList && places.length > 0 && (
+      {isLoading && (
+        <div className="flex justify-center my-2">
+          <Spinner
+            thickness={2}
+            size={8}
+          />
+        </div>
+      )}
+      {!isLoading && isList && places.length > 0 && (
         <ul
           className="
             max-h-80
@@ -75,17 +91,19 @@ export const List = ({ query }: IList) => {
             [&_a_:last-child]:text-justify
           "
         >
-          {(places as IPlace[]).map(({ display_name, name, osm_id, osm_type }) => (
-            <li key={osm_id}>
-              <Link href={`/places/${osm_type[0].toUpperCase() + osm_id}`}>
-                <span>{name}</span>
-                <span>{display_name}</span>
+          {(places as IPlace[]).map(({ display_name, name, osm_id, osm_type }, i) => (
+            <li key={osm_id || `place-${i}`}>
+              <Link
+                href={osm_type && osm_id ? `/places/${osm_type[0].toUpperCase() + osm_id}` : "#"}
+              >
+                <span>{name || "-"}</span>
+                <span>{display_name || "-"}</span>
               </Link>
             </li>
           ))}
         </ul>
       )}
-      {isList && places.length === 0 && (
+      {!isLoading && isList && places.length === 0 && (
         <>
           <h2 className="text-neutral-400 text-center text-lg my-4 italic">Lugar não encontrado</h2>
           <Image
@@ -97,7 +115,7 @@ export const List = ({ query }: IList) => {
           />
         </>
       )}
-      {isError && "error"}
+      {!isLoading && isError && "error"}
     </section>
   )
 }
