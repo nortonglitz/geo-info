@@ -77,7 +77,7 @@ export const List = ({ query }: IList) => {
         >
           {(places as IPlace[]).map(({ display_name, name, osm_id, osm_type }) => (
             <li key={osm_id}>
-              <Link href={`/place/${osm_type[0].toUpperCase() + osm_id}`}>
+              <Link href={`/places/${osm_type[0].toUpperCase() + osm_id}`}>
                 <span>{name}</span>
                 <span>{display_name}</span>
               </Link>
