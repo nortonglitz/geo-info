@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { LocationDetailsTable } from "./LocationDetailsTable"
 import { useParams } from "next/navigation"
 import { ILocationDetails, searchLocationDetailsById } from "@/services/nominatim"
+import dynamic from "next/dynamic"
 
 export default function PlaceDetail() {
   const { id } = useParams()
@@ -18,6 +19,8 @@ export default function PlaceDetail() {
     }
   }
 
+  const Map = dynamic(() => import("./Map"), { ssr: false })
+
   useEffect(() => {
     if (id && typeof id == "string") {
       searchLocationDetails()
@@ -25,15 +28,28 @@ export default function PlaceDetail() {
   }, [id])
 
   return (
-    <main className="flex justify-center">
-      <article className="w-1/2">
-        <h1 className="text-3xl text-blue-800 font-medium border-b my-10">
-          {locDetails && locDetails.name}
-        </h1>
-        <section className="grid grid-cols-3">
-          {locDetails && <LocationDetailsTable details={locDetails} />}
-        </section>
-      </article>
-    </main>
+    <>
+      <main className="flex justify-center">
+        <article className="w-full xl:w-4/6">
+          <h1 className="text-3xl text-blue-800 font-medium border-b mt-4 mb-4">
+            {locDetails && locDetails.name}
+          </h1>
+          <section className="min-h-96 grid grid-cols-3 gap-4">
+            {locDetails && locDetails.lon && locDetails.lat && (
+              <Map
+                className="col-span-3 border border-neutral-200 rounded-xl h-96 z-0"
+                position={[locDetails.lat, locDetails.lon]}
+              />
+            )}
+            {locDetails && (
+              <LocationDetailsTable
+                details={locDetails}
+                className="col-span-3 md:col-span-1"
+              />
+            )}
+          </section>
+        </article>
+      </main>
+    </>
   )
 }
