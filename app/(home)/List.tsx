@@ -22,7 +22,11 @@ export const List = ({ query }: IList) => {
 
   const searchQuery = async () => {
     try {
-      let res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=jsonv2`)
+      let res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=jsonv2`, {
+        headers: {
+          "Accept-Language": "pt-BR"
+        }
+      })
       if (!res.ok) {
         throw new Error("Server unavailable")
       }
