@@ -1,3 +1,6 @@
+import { insertQueryParamsOnURL } from "@/libs/strings"
+const BASE_URL = "https://nominatim.openstreetmap.org"
+
 export interface ILocationDetails {
   name: string
   lat: number
@@ -13,14 +16,18 @@ export interface ILocationDetails {
 }
 
 export const searchLocationDetailsById = async (osm_id: string) => {
-  const res = await fetch(
-    `https://nominatim.openstreetmap.org/lookup?osm_ids=${osm_id}&format=jsonv2`,
-    {
-      headers: {
-        "Accept-Language": "pt-BR"
-      }
+  const url = insertQueryParamsOnURL(`${BASE_URL}/lookup`, {
+    osm_ids: osm_id,
+    format: "jsonv2"
+  })
+
+  const res = await fetch(url, {
+    headers: {
+      "Accept-Language": "pt-BR"
     }
-  )
+  })
+
+  console.log(res)
 
   if (!res.ok) {
     throw new Error("Server error")
@@ -38,7 +45,12 @@ export interface ILocation {
 }
 
 export const searchLocationsByQuery = async (query: string) => {
-  let res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=jsonv2`, {
+  const url = insertQueryParamsOnURL(`${BASE_URL}/search`, {
+    q: query,
+    format: "jsonv2"
+  })
+
+  let res = await fetch(url, {
     headers: {
       "Accept-Language": "pt-BR"
     }
