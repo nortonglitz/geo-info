@@ -31,7 +31,11 @@ export const formatLatAndLon = (latOrLon: number) => {
  */
 export const insertQueryParamsOnURL = <T extends Record<string, any>>(url: string, params: T) => {
   const queryParams = Object.entries(params)
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .map(([key, value]) =>
+      Array.isArray(value)
+        ? `${encodeURIComponent(key)}=${encodeURIComponent(value.join(","))}`
+        : `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+    )
     .join("&")
 
   return `${url}?${queryParams}`
