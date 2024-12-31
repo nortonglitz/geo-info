@@ -37,7 +37,7 @@ export default function PlaceDetail() {
           <section className="min-h-96 grid grid-cols-3 gap-4">
             {locDetails && locDetails.lon && locDetails.lat && (
               <Map
-                className="col-span-3 border border-neutral-200 rounded-xl h-96 z-0"
+                className="col-span-3 h-96 border border-neutral-200 rounded-xl"
                 position={[locDetails.lat, locDetails.lon]}
               />
             )}

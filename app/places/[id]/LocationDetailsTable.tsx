@@ -15,7 +15,7 @@ export const LocationDetailsTable = ({ details, loading, className }: ILocationD
   if (details) {
     return (
       <div
-        className={`bg-white drop-shadow rounded-xl border-neutral-200 border overflow-hidden h-fit opacity-90 select-none pointer-events-none ${className}`}
+        className={`bg-white rounded-xl border-neutral-200 border overflow-hidden h-fit opacity-90 select-none pointer-events-none ${className}`}
       >
         <table className="w-full">
           <tbody
