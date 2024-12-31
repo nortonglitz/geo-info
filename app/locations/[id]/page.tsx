@@ -5,6 +5,7 @@ import { LocationDetailsTable } from "./LocationDetailsTable"
 import { useParams } from "next/navigation"
 import { ILocationDetails, searchLocationDetailsById } from "@/services/nominatim"
 import dynamic from "next/dynamic"
+import { Spinner } from "@/components"
 
 export default function PlaceDetail() {
   const { id } = useParams()
@@ -12,14 +13,23 @@ export default function PlaceDetail() {
 
   const searchLocationDetails = async () => {
     try {
-      setLocDetails((await searchLocationDetailsById(id as string)) as ILocationDetails)
+      setLocDetails(await searchLocationDetailsById(id as string))
     } catch {
       setLocDetails(null)
     } finally {
     }
   }
 
-  const Map = dynamic(() => import("./Map"), { ssr: false })
+  const mapPlaceholder = (
+    <div className="col-span-3 h-96 border border-neutral-200 rounded-xl w-full flex items-center justify-center">
+      <Spinner />
+    </div>
+  )
+
+  const Map = dynamic(() => import("./Map"), {
+    ssr: false,
+    loading: () => mapPlaceholder
+  })
 
   useEffect(() => {
     if (id && typeof id == "string") {
@@ -37,7 +47,7 @@ export default function PlaceDetail() {
           <section className="min-h-96 grid grid-cols-3 gap-4">
             {locDetails && locDetails.lon && locDetails.lat && (
               <Map
-                className="col-span-3 h-96 border border-neutral-200 rounded-xl"
+                className="col-span-3 h-96 border border-neutral-200 rounded-xl w-full"
                 position={[locDetails.lat, locDetails.lon]}
               />
             )}

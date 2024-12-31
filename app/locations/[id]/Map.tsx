@@ -25,7 +25,7 @@ export interface IMap {
 const Map = ({ position, className }: IMap) => {
   return (
     <MapContainer
-      className={`${className} w-full h-full`}
+      className={className}
       center={position}
       zoom={13}
     >
