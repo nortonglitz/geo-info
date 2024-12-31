@@ -15,9 +15,7 @@ export default function Home() {
   return (
     <main className="flex justify-center">
       <article className="flex flex-col items-center gap-4 mt-20 md:mt-32 lg:mt-52 max-w-sm sm:max-w-md w-full">
-        <h1 className="text-3xl font-medium text-blue-800 text-center">
-          Qual endereço você procura?
-        </h1>
+        <h1 className="text-3xl font-medium text-blue-800 text-center">Qual lugar você procura?</h1>
         <form
           className="w-full"
           onSubmit={e => e.preventDefault()}
