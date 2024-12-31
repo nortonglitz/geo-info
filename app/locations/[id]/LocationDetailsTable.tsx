@@ -1,21 +1,36 @@
+import { Spinner } from "@/components"
 import { countryCodeToFlagEmoji, formatLatAndLon } from "@/libs/strings"
 import { ILocationDetails } from "@/services/nominatim"
+import { IconDatabaseOff } from "@tabler/icons-react"
 
 interface ILocationDetailsTable {
-  details: ILocationDetails
-  loading?: boolean
+  details?: ILocationDetails | null
   className?: string
 }
 
-export const LocationDetailsTable = ({ details, loading, className }: ILocationDetailsTable) => {
-  if (loading) {
-    return <>Loading...</>
+export const LocationDetailsTable = ({ details, className }: ILocationDetailsTable) => {
+  // Placeholder
+  if (details === undefined) {
+    return (
+      <div className="bg-white rounded-xl border-neutral-200 border h-48 flex justify-center items-center">
+        <Spinner />
+      </div>
+    )
+  }
+
+  if (details === null) {
+    return (
+      <div className="bg-white rounded-xl border-neutral-200 border h-48 flex flex-col items-center justify-center">
+        <IconDatabaseOff className="w-10 h-10 text-neutral-200" />
+        <p className="text-neutral-400">Problema no servidor</p>
+      </div>
+    )
   }
 
   if (details) {
     return (
       <div
-        className={`bg-white rounded-xl border-neutral-200 border overflow-hidden h-fit opacity-90 select-none pointer-events-none ${className}`}
+        className={`bg-white rounded-xl border-neutral-200 border overflow-hidden h-fit ${className}`}
       >
         <table className="w-full">
           <tbody

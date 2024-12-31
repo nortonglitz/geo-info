@@ -16,7 +16,6 @@ export default function PlaceDetail() {
       setLocDetails(await searchLocationDetailsById(id as string))
     } catch {
       setLocDetails(null)
-    } finally {
     }
   }
 
@@ -51,12 +50,10 @@ export default function PlaceDetail() {
                 position={[locDetails.lat, locDetails.lon]}
               />
             )}
-            {locDetails && (
-              <LocationDetailsTable
-                details={locDetails}
-                className="col-span-3 md:col-span-1"
-              />
-            )}
+            <LocationDetailsTable
+              details={locDetails}
+              className="col-span-3 md:col-span-1"
+            />
           </section>
         </article>
       </main>
