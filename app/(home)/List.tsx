@@ -17,7 +17,7 @@ interface IList {
 }
 
 export const List = ({ query }: IList) => {
-  const [places, setPlaces] = useState<undefined | "error" | IPlace[]>(undefined)
+  const [places, setPlaces] = useState<undefined | null | IPlace[]>(undefined)
   const [isLoading, setIsLoading] = useState(false)
 
   const searchQuery = async () => {
@@ -29,7 +29,7 @@ export const List = ({ query }: IList) => {
       const data = await res.json()
       setPlaces(data)
     } catch {
-      setPlaces("error")
+      setPlaces(null)
     } finally {
       setIsLoading(false)
     }
@@ -46,7 +46,7 @@ export const List = ({ query }: IList) => {
   }, [query])
 
   const isList = Array.isArray(places)
-  const isError = places === "error"
+  const isError = places === null
   const isEmpty = typeof places === "undefined"
 
   if (isEmpty && !isLoading) {
