@@ -4,34 +4,20 @@ import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { Spinner } from "@/components"
-
-interface IPlace {
-  display_name?: string
-  name?: string
-  osm_id?: string
-  osm_type?: string
-}
+import { ILocation, searchLocationsByQuery } from "@/services/nominatim"
 
 interface IList {
   query?: string
 }
 
 export const List = ({ query }: IList) => {
-  const [places, setPlaces] = useState<undefined | null | IPlace[]>(undefined)
+  const [places, setPlaces] = useState<undefined | null | ILocation[]>(undefined)
   const [isLoading, setIsLoading] = useState(false)
 
   const searchQuery = async () => {
     try {
-      let res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=jsonv2`, {
-        headers: {
-          "Accept-Language": "pt-BR"
-        }
-      })
-      if (!res.ok) {
-        throw new Error("Server unavailable")
-      }
-      const data = await res.json()
-      setPlaces(data)
+      const locations = await searchLocationsByQuery(query as string)
+      setPlaces(locations)
     } catch {
       setPlaces(null)
     } finally {
@@ -92,7 +78,7 @@ export const List = ({ query }: IList) => {
             [&_a_:last-child]:text-justify
           "
         >
-          {(places as IPlace[]).map(({ display_name, name, osm_id, osm_type }, i) => (
+          {(places as ILocation[]).map(({ display_name, name, osm_id, osm_type }, i) => (
             <li key={osm_id || `place-${i}`}>
               <Link
                 href={osm_type && osm_id ? `/places/${osm_type[0].toUpperCase() + osm_id}` : "#"}

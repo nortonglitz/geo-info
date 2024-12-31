@@ -29,3 +29,23 @@ export const searchLocationDetailsById = async (osm_id: string) => {
   const locationDetails: ILocationDetails[] = await res.json()
   return locationDetails[0]
 }
+
+export interface ILocation {
+  display_name?: string
+  name?: string
+  osm_id?: string
+  osm_type?: string
+}
+
+export const searchLocationsByQuery = async (query: string) => {
+  let res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=jsonv2`, {
+    headers: {
+      "Accept-Language": "pt-BR"
+    }
+  })
+  if (!res.ok) {
+    throw new Error("Server unavailable")
+  }
+  const locations: ILocation[] = await res.json()
+  return locations
+}
