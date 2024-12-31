@@ -4,16 +4,19 @@ import { ILocationDetails } from "@/services/nominatim"
 interface ILocationDetailsTable {
   details: ILocationDetails
   loading?: boolean
+  className?: string
 }
 
-export const LocationDetailsTable = ({ details, loading }: ILocationDetailsTable) => {
+export const LocationDetailsTable = ({ details, loading, className }: ILocationDetailsTable) => {
   if (loading) {
     return <>Loading...</>
   }
 
   if (details) {
     return (
-      <div className="bg-white rounded-xl border-neutral-200 border overflow-hidden">
+      <div
+        className={`bg-white drop-shadow rounded-xl border-neutral-200 border overflow-hidden h-fit opacity-90 select-none pointer-events-none ${className}`}
+      >
         <table className="w-full">
           <tbody
             className="
