@@ -11,15 +11,15 @@ interface IList {
 }
 
 export const List = ({ query }: IList) => {
-  const [places, setPlaces] = useState<undefined | null | ILocation[]>(undefined)
+  const [locations, setLocations] = useState<undefined | null | ILocation[]>(undefined)
   const [isLoading, setIsLoading] = useState(false)
 
   const searchQuery = async () => {
     try {
       const locations = await searchLocationsByQuery(query as string)
-      setPlaces(locations)
+      setLocations(locations)
     } catch {
-      setPlaces(null)
+      setLocations(null)
     } finally {
       setIsLoading(false)
     }
@@ -30,14 +30,14 @@ export const List = ({ query }: IList) => {
       setIsLoading(true)
       searchQuery()
     } else {
-      setPlaces(undefined)
+      setLocations(undefined)
       setIsLoading(false)
     }
   }, [query])
 
-  const isList = Array.isArray(places)
-  const isError = places === null
-  const isEmpty = typeof places === "undefined"
+  const isList = Array.isArray(locations)
+  const isError = locations === null
+  const isEmpty = typeof locations === "undefined"
 
   if (isEmpty && !isLoading) {
     return <></>
@@ -59,7 +59,7 @@ export const List = ({ query }: IList) => {
           <Spinner />
         </div>
       )}
-      {!isLoading && isList && places.length > 0 && (
+      {!isLoading && isList && locations.length > 0 && (
         <ul
           className="
             max-h-80
@@ -78,10 +78,10 @@ export const List = ({ query }: IList) => {
             [&_a_:last-child]:text-justify
           "
         >
-          {(places as ILocation[]).map(({ display_name, name, osm_id, osm_type }, i) => (
+          {(locations as ILocation[]).map(({ display_name, name, osm_id, osm_type }, i) => (
             <li key={osm_id || `place-${i}`}>
               <Link
-                href={osm_type && osm_id ? `/places/${osm_type[0].toUpperCase() + osm_id}` : "#"}
+                href={osm_type && osm_id ? `/locations/${osm_type[0].toUpperCase() + osm_id}` : "#"}
               >
                 <span>{name || "-"}</span>
                 <span>{display_name || "-"}</span>
@@ -90,7 +90,7 @@ export const List = ({ query }: IList) => {
           ))}
         </ul>
       )}
-      {!isLoading && isList && places.length === 0 && (
+      {!isLoading && isList && locations.length === 0 && (
         <>
           <h2 className="text-neutral-400 text-center text-lg my-4 italic">Lugar não encontrado</h2>
           <Image
