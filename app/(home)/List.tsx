@@ -70,10 +70,7 @@ export const List = ({ query }: IList) => {
     >
       {isLoading && (
         <div className="flex justify-center my-2">
-          <Spinner
-            thickness={2}
-            size={6}
-          />
+          <Spinner />
         </div>
       )}
       {!isLoading && isList && places.length > 0 && (
