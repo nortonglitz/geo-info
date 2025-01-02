@@ -14,18 +14,18 @@ export const List = ({ query }: IList) => {
   const [locations, setLocations] = useState<undefined | null | ILocation[]>(undefined)
   const [isLoading, setIsLoading] = useState(false)
 
-  const searchQuery = async () => {
-    try {
-      if (typeof query !== "string") throw new Error("Invalid query.")
-      setLocations(await searchLocationsByQuery(query))
-    } catch {
-      setLocations(null)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   useEffect(() => {
+    const searchQuery = async () => {
+      try {
+        if (typeof query !== "string") throw new Error("Invalid query.")
+        setLocations(await searchLocationsByQuery(query))
+      } catch {
+        setLocations(null)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
     if (query && query.length > 2) {
       setIsLoading(true)
       searchQuery()
