@@ -1,7 +1,7 @@
 import { insertQueryParamsOnURL } from "@/libs/strings"
 import { OpenMeteoError, printOpenMeteoError } from "./error"
 
-const BASE_URL = process.env.NEXT_PUBLIC_NOMINATIM_API_BASE_URL
+const BASE_URL = process.env.NEXT_PUBLIC_OPENMETEO_API_BASE_URL
 
 type WeatherParams = {
   latitude: number
@@ -12,6 +12,32 @@ type WeatherParams = {
 }
 
 type Coordinates = { lat: number; lon: number }
+
+export type Weather = {
+  current: { time: Date; interval: number; temperature_2m: number }
+  current_units: { interval: string; temperature_2m: string; time: string }
+  daily: {
+    apparent_temperature_max: number[]
+    apparent_temperature_min: number[]
+    temperature_2m_max: number[]
+    temperature_2m_min: number[]
+    time: Date[]
+  }
+  daily_units: {
+    time: string
+    temperature_2m_max: string
+    temperature_2m_min: string
+    apparent_temperature_max: string
+    apparent_temperature_min: string
+  }
+  elevation: number
+  generationtime_ms: number
+  latitude: number
+  longitude: number
+  timezone: string
+  timezone_abbreviation: string
+  utc_offset_seconds: number
+}
 
 export const searchLocationWeatherByCoordinates = async (pos: Coordinates) => {
   try {
@@ -36,7 +62,7 @@ export const searchLocationWeatherByCoordinates = async (pos: Coordinates) => {
       throw new OpenMeteoError("Faield to fetch weather data by coordinates.", res.status, url)
     }
 
-    return await res.json()
+    return (await res.json()) as Weather
   } catch (err) {
     printOpenMeteoError(err)
     throw err

@@ -1,7 +1,7 @@
 import { insertQueryParamsOnURL } from "@/libs/strings"
 import { NominatimError, printNominatimError } from "./error"
 
-const BASE_URL = process.env.NEXT_PUBLIC_OPENMETEO_API_BASE_URL
+const BASE_URL = process.env.NEXT_PUBLIC_NOMINATIM_API_BASE_URL
 
 export interface ILocationDetails {
   name: string
@@ -56,7 +56,7 @@ export const searchLocationsByQuery = async (query: string) => {
       format: "jsonv2"
     })
 
-    let res = await fetch(url, {
+    const res = await fetch(url, {
       headers: {
         "Accept-Language": "pt-BR"
       }
