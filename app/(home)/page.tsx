@@ -5,12 +5,12 @@ import { debounce } from "@/libs/debounce"
 
 export default function Home() {
   const [query, setQuery] = useState("")
-  const debouncedQuery = useCallback(
-    debounce((value: string) => {
-      setQuery(value)
-    }, 500),
-    []
-  )
+
+  const debouncedQueryFunction = debounce((value: string) => {
+    setQuery(value)
+  }, 500)
+
+  const debouncedQuery = useCallback(debouncedQueryFunction, [debouncedQueryFunction])
 
   return (
     <main className="flex justify-center">
