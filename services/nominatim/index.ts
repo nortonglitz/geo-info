@@ -1,7 +1,7 @@
 import { insertQueryParamsOnURL } from "@/libs/strings"
 import { NominatimError, printNominatimError } from "./error"
 
-const BASE_URL = process.env.OPENMETEO_API_BASE_URL
+const BASE_URL = process.env.NEXT_PUBLIC_OPENMETEO_API_BASE_URL
 
 export interface ILocationDetails {
   name: string

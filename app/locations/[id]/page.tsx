@@ -4,8 +4,10 @@ import { useEffect, useState } from "react"
 import { LocationDetailsTable } from "./LocationDetailsTable"
 import { useParams } from "next/navigation"
 import { ILocationDetails, searchLocationDetailsById } from "@/services/nominatim"
+import { searchLocationWeatherByCoordinates } from "@/services/open-meteo"
 import dynamic from "next/dynamic"
 import { Spinner } from "@/components"
+import { LocationWeather } from "./LocationWeather"
 
 export default function PlaceDetail() {
   const { id } = useParams()
@@ -13,10 +15,25 @@ export default function PlaceDetail() {
 
   const searchLocationDetails = async () => {
     try {
+      if (typeof id !== "string") throw new Error("Invalid id.")
       setLocDetails(await searchLocationDetailsById(id as string))
     } catch {
       setLocDetails(null)
     }
+  }
+
+  const searchLocationWeather = async () => {
+    try {
+      if (!locDetails || (!locDetails.lat && !locDetails.lon)) {
+        throw new Error("Invalid coordinates.")
+      }
+
+      const test = await searchLocationWeatherByCoordinates({
+        lat: locDetails.lat,
+        lon: locDetails?.lon
+      })
+      console.log(test)
+    } catch {}
   }
 
   const mapPlaceholder = (
@@ -36,6 +53,12 @@ export default function PlaceDetail() {
     }
   }, [id])
 
+  useEffect(() => {
+    if (locDetails && locDetails.lat && locDetails.lon) {
+      searchLocationWeather()
+    }
+  }, [locDetails])
+
   return (
     <>
       <main className="flex justify-center">
@@ -44,16 +67,15 @@ export default function PlaceDetail() {
             {locDetails && locDetails.name}
           </h1>
           <section className="min-h-96 grid grid-cols-3 gap-4">
-            {locDetails && locDetails.lon && locDetails.lat && (
-              <Map
-                className="col-span-3 h-96 border border-neutral-200 rounded-xl w-full"
-                position={[locDetails.lat, locDetails.lon]}
-              />
-            )}
+            <Map
+              className="col-span-3 h-96 border border-neutral-200 rounded-xl w-full"
+              position={locDetails ? [locDetails.lat, locDetails.lon] : [-10.3333, -53.2]}
+            />
             <LocationDetailsTable
               details={locDetails}
               className="col-span-3 md:col-span-1"
             />
+            <LocationWeather />
           </section>
         </article>
       </main>

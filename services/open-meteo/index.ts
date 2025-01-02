@@ -1,7 +1,7 @@
 import { insertQueryParamsOnURL } from "@/libs/strings"
 import { OpenMeteoError, printOpenMeteoError } from "./error"
 
-const BASE_URL = process.env.NOMINATIM_API_BASE_URL
+const BASE_URL = process.env.NEXT_PUBLIC_NOMINATIM_API_BASE_URL
 
 type WeatherParams = {
   latitude: number
