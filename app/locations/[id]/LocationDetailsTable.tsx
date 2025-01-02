@@ -26,6 +26,7 @@ export const LocationDetailsTable = ({ details, className }: ILocationDetailsTab
       </div>
     )
   }
+  /////////////////
 
   if (details) {
     return (
