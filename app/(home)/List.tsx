@@ -16,8 +16,8 @@ export const List = ({ query }: IList) => {
 
   const searchQuery = async () => {
     try {
-      const locations = await searchLocationsByQuery(query as string)
-      setLocations(locations)
+      if (typeof query !== "string") throw new Error("Invalid query.")
+      setLocations(await searchLocationsByQuery(query))
     } catch {
       setLocations(null)
     } finally {
