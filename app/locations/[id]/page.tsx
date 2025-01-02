@@ -8,33 +8,12 @@ import { searchLocationWeatherByCoordinates } from "@/services/open-meteo"
 import dynamic from "next/dynamic"
 import { Spinner } from "@/components"
 import { LocationWeather } from "./LocationWeather"
+import { Weather } from "@/services/open-meteo"
 
 export default function PlaceDetail() {
   const { id } = useParams()
   const [locDetails, setLocDetails] = useState<null | undefined | ILocationDetails>(undefined)
-
-  const searchLocationDetails = async () => {
-    try {
-      if (typeof id !== "string") throw new Error("Invalid id.")
-      setLocDetails(await searchLocationDetailsById(id as string))
-    } catch {
-      setLocDetails(null)
-    }
-  }
-
-  const searchLocationWeather = async () => {
-    try {
-      if (!locDetails || (!locDetails.lat && !locDetails.lon)) {
-        throw new Error("Invalid coordinates.")
-      }
-
-      const test = await searchLocationWeatherByCoordinates({
-        lat: locDetails.lat,
-        lon: locDetails?.lon
-      })
-      console.log(test)
-    } catch {}
-  }
+  const [locWeather, setLocWeather] = useState<null | undefined | Weather>(undefined)
 
   const mapPlaceholder = (
     <div className="col-span-3 h-96 border border-neutral-200 rounded-xl w-full flex items-center justify-center">
@@ -48,12 +27,38 @@ export default function PlaceDetail() {
   })
 
   useEffect(() => {
+    const searchLocationDetails = async () => {
+      try {
+        if (typeof id !== "string") throw new Error("Invalid id.")
+        setLocDetails(await searchLocationDetailsById(id))
+      } catch {
+        setLocDetails(null)
+      }
+    }
+
     if (id && typeof id == "string") {
       searchLocationDetails()
     }
   }, [id])
 
   useEffect(() => {
+    const searchLocationWeather = async () => {
+      try {
+        if (!locDetails || (!locDetails.lat && !locDetails.lon)) {
+          throw new Error("Invalid coordinates.")
+        }
+
+        setLocWeather(
+          await searchLocationWeatherByCoordinates({
+            lat: locDetails.lat,
+            lon: locDetails.lon
+          })
+        )
+      } catch {
+        setLocWeather(null)
+      }
+    }
+
     if (locDetails && locDetails.lat && locDetails.lon) {
       searchLocationWeather()
     }
@@ -75,7 +80,7 @@ export default function PlaceDetail() {
               details={locDetails}
               className="col-span-3 md:col-span-1"
             />
-            <LocationWeather />
+            <LocationWeather data={locWeather} />
           </section>
         </article>
       </main>
