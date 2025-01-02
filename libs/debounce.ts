@@ -1,4 +1,4 @@
-export const debounce = <T extends (...args: any[]) => any>(fc: T, timer: number) => {
+export const debounce = <T extends (...args: unknown[]) => unknown>(fc: T, timer: number) => {
   let timeout: NodeJS.Timeout | null = null
 
   return (...args: Parameters<T>): void => {
