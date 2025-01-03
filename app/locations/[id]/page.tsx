@@ -9,6 +9,7 @@ import dynamic from "next/dynamic"
 import { Spinner } from "@/components"
 import { LocationWeatherForecast } from "./LocationWeatherForecast"
 import { Weather } from "@/services/open-meteo"
+import { LocationCurrentWeather } from "./LocationCurrentWeather"
 
 export default function PlaceDetail() {
   const { id } = useParams()
@@ -67,7 +68,7 @@ export default function PlaceDetail() {
   return (
     <>
       <main className="flex justify-center">
-        <article className="w-full xl:w-4/6">
+        <article className="w-full xl:w-5/6">
           <h1 className="text-3xl text-blue-800 font-medium border-b mt-4 mb-4">
             {locDetails && locDetails.name}
           </h1>
@@ -79,6 +80,10 @@ export default function PlaceDetail() {
             <LocationDetailsTable
               details={locDetails}
               className="col-span-3 md:col-span-1"
+            />
+            <LocationCurrentWeather
+              data={locWeather}
+              className="col-span-3 md:col-span-2"
             />
             <LocationWeatherForecast
               data={locWeather}
