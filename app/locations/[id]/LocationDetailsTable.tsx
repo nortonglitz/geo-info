@@ -9,7 +9,7 @@ interface ILocationDetailsTable {
 }
 
 export const LocationDetailsTable = ({ details, className }: ILocationDetailsTable) => {
-  // Placeholder
+  // Placeholder carregando
   if (details === undefined) {
     return (
       <div
@@ -20,6 +20,7 @@ export const LocationDetailsTable = ({ details, className }: ILocationDetailsTab
     )
   }
 
+  // Placeholder para erro
   if (details === null) {
     return (
       <div
@@ -30,7 +31,6 @@ export const LocationDetailsTable = ({ details, className }: ILocationDetailsTab
       </div>
     )
   }
-  /////////////////
 
   if (details) {
     return (
