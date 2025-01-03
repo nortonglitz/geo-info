@@ -9,6 +9,7 @@ import {
   IconCloudRain,
   IconCalendarMonth
 } from "@tabler/icons-react"
+import { getWeatherDescriptionFromCode } from "@/libs/weather"
 
 interface ILocationCurrentWeather {
   data?: Weather | null
@@ -73,6 +74,7 @@ export const LocationCurrentWeather = ({ data, className }: ILocationCurrentWeat
         border-neutral-200
         rounded-xl
         flex
+        overflow-hidden
 
         [&_section]:py-4
 
@@ -82,13 +84,19 @@ export const LocationCurrentWeather = ({ data, className }: ILocationCurrentWeat
         ${className}
       `}
     >
-      <section className="w-3/5 grid grid-cols-7 items-center">
-        {/*eslint-disable-next-line @next/next/no-img-element*/}
-        <img
-          src={`/assets/icons/weather/animated/${data.current.is_day ? "day" : "night"}/${data.current.weather_code}.svg`}
-          alt="weather now icon"
-          className="h-32 object-contain col-span-7 m-auto lg:col-span-3"
-        />
+      <section className="w-3/5 grid grid-cols-7 items-center gap-8">
+        <div className="col-span-7 m-auto lg:col-span-3 relative">
+          {/*eslint-disable-next-line @next/next/no-img-element*/}
+          <img
+            src={`/assets/icons/weather/animated/${data.current.is_day ? "day" : "night"}/${data.current.weather_code}.svg`}
+            alt="weather now icon"
+            title={getWeatherDescriptionFromCode(data.current.weather_code)}
+            className="h-32 object-contain cursor-help"
+          />
+          <p className="text-neutral-400 text-center absolute -bottom-4 right-0 left-0">
+            {getWeatherDescriptionFromCode(data.current.weather_code)}
+          </p>
+        </div>
         <div
           className="
             flex
@@ -166,6 +174,7 @@ export const LocationCurrentWeather = ({ data, className }: ILocationCurrentWeat
           />
           <span>
             {new Date(data.current.time).toLocaleString("pt-BR", {
+              weekday: "short",
               day: "2-digit",
               month: "long"
             })}

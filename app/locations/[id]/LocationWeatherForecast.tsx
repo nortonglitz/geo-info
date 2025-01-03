@@ -3,6 +3,7 @@
 import { Weather } from "@/services/open-meteo"
 import { IconTemperature, IconUmbrella, IconDatabaseOff } from "@tabler/icons-react"
 import { Spinner } from "@/components"
+import { getWeatherDescriptionFromCode } from "@/libs/weather"
 
 interface ILocationWeatherForecast {
   data?: Weather | null
@@ -129,9 +130,10 @@ export const LocationWeatherForecast = ({ data, className }: ILocationWeatherFor
             <figure>
               {/*eslint-disable-next-line @next/next/no-img-element*/}
               <img
-                className="h-16 min-w-fit"
+                className="h-16 min-w-fit cursor-help"
                 src={`/assets/icons/weather/static/${data.daily.weather_code[i]}.svg`}
                 alt="weather icon"
+                title={getWeatherDescriptionFromCode(data.daily.weather_code[i])}
               />
             </figure>
           </div>
