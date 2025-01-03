@@ -13,6 +13,9 @@ type WeatherParams = {
 
 type Coordinates = { lat: number; lon: number }
 
+// prettier-ignore
+export type WeatherCode = 0 | 1 | 2 | 3 | 45 | 48 | 51 | 53 | 55 | 56 | 57 | 61 | 63 | 65 | 66 | 67 | 71 | 73 | 75 | 77 | 80 | 81 | 82 | 85 | 86 | 95 | 96 | 99
+
 export type Weather = {
   latitude: number
   longitude: number
@@ -39,11 +42,11 @@ export type Weather = {
     apparent_temperature: number
     is_day: number
     precipitation: number
-    weather_code: number
+    weather_code: WeatherCode
   }
   daily_units: {
     time: string
-    weather_code: string
+    weather_code: WeatherCode
     temperature_2m_max: string
     temperature_2m_min: string
     daylight_duration: string
@@ -52,7 +55,7 @@ export type Weather = {
   }
   daily: {
     time: string[]
-    weather_code: number[]
+    weather_code: WeatherCode[]
     temperature_2m_max: number[]
     temperature_2m_min: number[]
     daylight_duration: number[]
