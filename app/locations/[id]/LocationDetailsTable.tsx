@@ -12,7 +12,9 @@ export const LocationDetailsTable = ({ details, className }: ILocationDetailsTab
   // Placeholder
   if (details === undefined) {
     return (
-      <div className="bg-white rounded-xl border-neutral-200 border h-48 flex justify-center items-center">
+      <div
+        className={`bg-white rounded-xl border-neutral-200 border h-48 flex justify-center items-center ${className}}`}
+      >
         <Spinner />
       </div>
     )
@@ -20,7 +22,9 @@ export const LocationDetailsTable = ({ details, className }: ILocationDetailsTab
 
   if (details === null) {
     return (
-      <div className="bg-white rounded-xl border-neutral-200 border h-48 flex flex-col items-center justify-center">
+      <div
+        className={`bg-white rounded-xl border-neutral-200 border h-48 flex flex-col items-center justify-center ${className}`}
+      >
         <IconDatabaseOff className="w-10 h-10 text-neutral-200" />
         <p className="text-neutral-400">Problema no servidor</p>
       </div>
