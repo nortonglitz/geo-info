@@ -99,6 +99,7 @@ export const LocationCurrentWeather = ({ data, className }: ILocationCurrentWeat
             [&>div]:flex
             [&>div]:flex-col
             [&>div]:items-center
+            [&>div]:cursor-help
           "
         >
           <div title="Temperatura agora">
@@ -143,6 +144,7 @@ export const LocationCurrentWeather = ({ data, className }: ILocationCurrentWeat
           [&>div]:flex-col
           [&>div]:items-center
           [&>div]:text-center
+          [&>div]:cursor-help
         "
       >
         <div title="Horário local">
