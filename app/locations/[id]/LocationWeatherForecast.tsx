@@ -66,15 +66,13 @@ export const LocationWeatherForecast = ({ data, className }: ILocationWeatherFor
         rounded-xl
         ${className}
         justify-between
-        overflow-hidden
-
-        [&_img]:h-16
+        overflow-x-auto
       `}
     >
       {data.daily.time.map((time, i) => (
         <section
           key={`${time}-${i}`}
-          className="pt-2 pb-3 flex-1 flex flex-col items-center [&:nth-child(odd)]:bg-neutral-100"
+          className="pt-2 pb-3 px-2 flex-1 flex flex-col items-center [&:nth-child(odd)]:bg-neutral-100 min-w-fit"
         >
           <header
             title={new Date(data.daily.time[i]).toLocaleString("pt-BR", {
@@ -117,6 +115,7 @@ export const LocationWeatherForecast = ({ data, className }: ILocationWeatherFor
             <figure>
               {/*eslint-disable-next-line @next/next/no-img-element*/}
               <img
+                className="h-16 min-w-fit"
                 src={`/assets/icons/weather/static/${data.daily.weather_code[i]}.svg`}
                 alt="weather icon"
               />

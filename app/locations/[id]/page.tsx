@@ -7,7 +7,7 @@ import { ILocationDetails, searchLocationDetailsById } from "@/services/nominati
 import { searchLocationWeatherByCoordinates } from "@/services/open-meteo"
 import dynamic from "next/dynamic"
 import { Spinner } from "@/components"
-import { LocationWeather } from "./LocationWeather"
+import { LocationWeatherForecast } from "./LocationWeatherForecast"
 import { Weather } from "@/services/open-meteo"
 
 export default function PlaceDetail() {
@@ -42,7 +42,7 @@ export default function PlaceDetail() {
   }, [id])
 
   useEffect(() => {
-    const searchLocationWeather = async () => {
+    const searchLocWeather = async () => {
       try {
         if (!locDetails || (!locDetails.lat && !locDetails.lon)) {
           throw new Error("Invalid coordinates.")
@@ -60,7 +60,7 @@ export default function PlaceDetail() {
     }
 
     if (locDetails && locDetails.lat && locDetails.lon) {
-      searchLocationWeather()
+      searchLocWeather()
     }
   }, [locDetails])
 
@@ -80,7 +80,10 @@ export default function PlaceDetail() {
               details={locDetails}
               className="col-span-3 md:col-span-1"
             />
-            <LocationWeather data={locWeather} />
+            <LocationWeatherForecast
+              data={locWeather}
+              className="col-span-3"
+            />
           </section>
         </article>
       </main>
