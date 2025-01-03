@@ -11,7 +11,8 @@ import {
   IconCalendarMonth
 } from "@tabler/icons-react"
 import { getWeatherDescriptionFromCode } from "@/libs/weather"
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { fetchLocalTimeByCoordinates } from "@/actions/fetchLocalTimeByCoordinates"
 
 interface ILocationCurrentWeather {
   data?: Weather | null
@@ -22,17 +23,39 @@ const iconsSize = "1.4rem"
 const iconsStroke = "1px"
 
 export const LocationCurrentWeather = ({ data, className }: ILocationCurrentWeather) => {
-  // Colocar useMemo porque está instanciando uma data nova a cada renderização.
-  // O useMemo mantém o valor, a menos que as dependências mudem, no caso é o data?.utc_offset_seconds
-  const initialTime = useMemo(() => {
-    return new Date(Date.now() + (data?.utc_offset_seconds || 0) * 1000).toISOString()
-  }, [data?.utc_offset_seconds])
+  const [localTime, setLocalTime] = useState<Date | undefined | null>(undefined)
 
-  const offset = useMemo(() => {
-    return `${Math.floor((data?.utc_offset_seconds || 0) / 3600)}h`
-  }, [data?.utc_offset_seconds])
+  const clock = useClock(localTime?.toISOString())
 
-  const localTime = useClock(initialTime)
+  const timeOffset = useMemo(() => {
+    if (localTime) {
+      return Math.round((localTime.getTime() - Date.now()) / (1000 * 60 * 60))
+    }
+  }, [localTime])
+
+  useEffect(() => {
+    const fetchTime = async () => {
+      if (data && data.latitude && data.longitude)
+        try {
+          const timeData = await fetchLocalTimeByCoordinates({
+            lat: data.latitude,
+            lon: data.longitude
+          })
+          const parsedTimeData = new Date(timeData.date)
+          if (isNaN(parsedTimeData.getTime())) {
+            throw new Error("Invalid formatted time.")
+          }
+          setLocalTime(parsedTimeData)
+        } catch {
+          setLocalTime(null)
+        }
+    }
+
+    if (data) {
+      fetchTime()
+    }
+  }, [data])
+
   // Placeholder carregamento
   if (data === undefined) {
     return (
@@ -165,32 +188,48 @@ export const LocationCurrentWeather = ({ data, className }: ILocationCurrentWeat
           [&>div]:flex-col
           [&>div]:items-center
           [&>div]:text-center
-          [&>div]:cursor-help
         "
       >
-        <div title="Horário local">
-          <div className="flex">
+        <div>
+          <div
+            className="flex cursor-help"
+            title="Diferença para o seu horário"
+          >
             <IconClock
               size={iconsSize}
               stroke={iconsStroke}
             />
-            {offset}
+            {timeOffset ? (timeOffset >= 0 ? `+${timeOffset}h` : `-${timeOffset}h`) : null}
           </div>
-          <span>
-            {localTime.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+          <span
+            title="Horário local"
+            className="cursor-help"
+          >
+            {localTime === null || localTime === undefined
+              ? "--:--"
+              : clock.toLocaleTimeString("pt-BR", {
+                  hour: "2-digit",
+                  minute: "2-digit"
+                })}
+            {}
           </span>
         </div>
-        <div title="Data local">
+        <div
+          title="Data local"
+          className="cursor-help"
+        >
           <IconCalendarMonth
             size={iconsSize}
             stroke={iconsStroke}
           />
           <span>
-            {new Date(data.current.time).toLocaleString("pt-BR", {
-              weekday: "short",
-              day: "2-digit",
-              month: "long"
-            })}
+            {localTime
+              ? new Date(localTime).toLocaleString("pt-BR", {
+                  weekday: "short",
+                  day: "2-digit",
+                  month: "long"
+                })
+              : "-"}
           </span>
         </div>
       </section>
