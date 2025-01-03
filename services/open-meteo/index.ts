@@ -14,29 +14,51 @@ type WeatherParams = {
 type Coordinates = { lat: number; lon: number }
 
 export type Weather = {
-  current: { time: Date; interval: number; temperature_2m: number }
-  current_units: { interval: string; temperature_2m: string; time: string }
-  daily: {
-    apparent_temperature_max: number[]
-    apparent_temperature_min: number[]
-    temperature_2m_max: number[]
-    temperature_2m_min: number[]
-    time: Date[]
+  latitude: number
+  longitude: number
+  generationtime_ms: number
+  utc_offset_seconds: number
+  timezone: string
+  timezone_abbreviation: string
+  elevation: number
+  current_units: {
+    time: string
+    interval: string
+    temperature_2m: string
+    relative_humidity_2m: string
+    apparent_temperature: string
+    is_day: string
+    precipitation: string
+    weather_code: string
+  }
+  current: {
+    time: string
+    interval: number
+    temperature_2m: number
+    relative_humidity_2m: number
+    apparent_temperature: number
+    is_day: number
+    precipitation: number
+    weather_code: number
   }
   daily_units: {
     time: string
+    weather_code: string
     temperature_2m_max: string
     temperature_2m_min: string
-    apparent_temperature_max: string
-    apparent_temperature_min: string
+    daylight_duration: string
+    uv_index_max: string
+    precipitation_probability_max: string
   }
-  elevation: number
-  generationtime_ms: number
-  latitude: number
-  longitude: number
-  timezone: string
-  timezone_abbreviation: string
-  utc_offset_seconds: number
+  daily: {
+    time: string[]
+    weather_code: number[]
+    temperature_2m_max: number[]
+    temperature_2m_min: number[]
+    daylight_duration: number[]
+    uv_index_max: number[]
+    precipitation_probability_max: number[]
+  }
 }
 
 export const searchLocationWeatherByCoordinates = async (pos: Coordinates) => {
@@ -46,12 +68,21 @@ export const searchLocationWeatherByCoordinates = async (pos: Coordinates) => {
     const url = insertQueryParamsOnURL<WeatherParams>(BASE_URL, {
       latitude: lat,
       longitude: lon,
-      current: "temperature_2m",
+      current: [
+        "temperature_2m",
+        "relative_humidity_2m",
+        "apparent_temperature",
+        "is_day",
+        "precipitation",
+        "weather_code"
+      ],
       daily: [
+        "weather_code",
         "temperature_2m_max",
         "temperature_2m_min",
-        "apparent_temperature_max",
-        "apparent_temperature_min"
+        "daylight_duration",
+        "uv_index_max",
+        "precipitation_probability_max"
       ],
       timezone: "America/Sao_Paulo"
     })
