@@ -85,7 +85,7 @@ export const LocationCurrentWeather = ({ data, className }: ILocationCurrentWeat
       `}
     >
       <section className="w-3/5 grid grid-cols-7 items-center gap-8">
-        <div className="col-span-7 m-auto lg:col-span-3 relative">
+        <div className="col-span-7 m-auto lg:col-span-3 relative w-full flex justify-center">
           {/*eslint-disable-next-line @next/next/no-img-element*/}
           <img
             src={`/assets/icons/weather/animated/${data.current.is_day ? "day" : "night"}/${data.current.weather_code}.svg`}
@@ -93,7 +93,7 @@ export const LocationCurrentWeather = ({ data, className }: ILocationCurrentWeat
             title={getWeatherDescriptionFromCode(data.current.weather_code)}
             className="h-32 object-contain cursor-help"
           />
-          <p className="text-neutral-400 text-center absolute -bottom-4 right-0 left-0">
+          <p className="text-neutral-400 text-center absolute -bottom-2 right-0 left-0 text-sm text-nowrap">
             {getWeatherDescriptionFromCode(data.current.weather_code)}
           </p>
         </div>
