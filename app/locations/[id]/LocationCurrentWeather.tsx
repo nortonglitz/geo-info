@@ -1,6 +1,7 @@
 "use client"
 import { Weather } from "@/services/open-meteo"
 import { Spinner } from "@/components"
+import { useClock } from "@/hooks"
 import {
   IconDatabaseOff,
   IconTemperature,
@@ -10,6 +11,7 @@ import {
   IconCalendarMonth
 } from "@tabler/icons-react"
 import { getWeatherDescriptionFromCode } from "@/libs/weather"
+import { useMemo } from "react"
 
 interface ILocationCurrentWeather {
   data?: Weather | null
@@ -20,6 +22,17 @@ const iconsSize = "1.4rem"
 const iconsStroke = "1px"
 
 export const LocationCurrentWeather = ({ data, className }: ILocationCurrentWeather) => {
+  // Colocar useMemo porque está instanciando uma data nova a cada renderização.
+  // O useMemo mantém o valor, a menos que as dependências mudem, no caso é o data?.utc_offset_seconds
+  const initialTime = useMemo(() => {
+    return new Date(Date.now() + (data?.utc_offset_seconds || 0) * 1000).toISOString()
+  }, [data?.utc_offset_seconds])
+
+  const offset = useMemo(() => {
+    return `${Math.floor((data?.utc_offset_seconds || 0) / 3600)}h`
+  }, [data?.utc_offset_seconds])
+
+  const localTime = useClock(initialTime)
   // Placeholder carregamento
   if (data === undefined) {
     return (
@@ -156,15 +169,15 @@ export const LocationCurrentWeather = ({ data, className }: ILocationCurrentWeat
         "
       >
         <div title="Horário local">
-          <IconClock
-            size={iconsSize}
-            stroke={iconsStroke}
-          />
+          <div className="flex">
+            <IconClock
+              size={iconsSize}
+              stroke={iconsStroke}
+            />
+            {offset}
+          </div>
           <span>
-            {new Date(data.current.time).toLocaleString("pt-BR", {
-              hour: "2-digit",
-              minute: "2-digit"
-            })}
+            {localTime.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
           </span>
         </div>
         <div title="Data local">
