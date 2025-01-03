@@ -9,6 +9,9 @@ interface ILocationWeatherForecast {
   className?: string
 }
 
+const iconsSize = "1rem"
+const iconsStroke = "1.5px"
+
 export const LocationWeatherForecast = ({ data, className }: ILocationWeatherForecast) => {
   // Placeholder carregamento
   if (data === undefined) {
@@ -97,17 +100,28 @@ export const LocationWeatherForecast = ({ data, className }: ILocationWeatherFor
             </div>
           </header>
           <div className="flex items-center gap-4">
-            <div className="flex flex-col gap-1 [&>div]:cursor-help [&>div]:flex">
+            <div className="flex flex-col gap-1 [&>div]:cursor-help [&>div]:flex [&>div]:items-center">
               <div title="Temperatura máxima">
-                <IconTemperature className="text-red-500" />
+                <IconTemperature
+                  className="text-red-500"
+                  stroke={iconsStroke}
+                  size={iconsSize}
+                />
                 {Math.round(data.daily.temperature_2m_max[i]) + data.daily_units.temperature_2m_max}
               </div>
               <div title="Temperatura mínima">
-                <IconTemperature className="text-blue-500" />
+                <IconTemperature
+                  className="text-blue-500"
+                  stroke={iconsStroke}
+                  size={iconsSize}
+                />
                 {Math.round(data.daily.temperature_2m_min[i]) + data.daily_units.temperature_2m_min}
               </div>
               <div title="Probabilidade de precipitação">
-                <IconUmbrella />
+                <IconUmbrella
+                  size={iconsSize}
+                  stroke={iconsStroke}
+                />
                 {data.daily.precipitation_probability_max[i] +
                   data.daily_units.precipitation_probability_max}
               </div>
