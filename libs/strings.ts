@@ -49,14 +49,12 @@ export const insertQueryParamsOnURL = <T extends Record<string, unknown>>(
   const queryParams = Object.entries(params)
     .map(([key, value]) => {
       if (Array.isArray(value)) {
-        // Verifica se o valor é um array
         return `${encodeURIComponent(key)}=${encodeURIComponent(value.join(","))}`
       } else if (
         typeof value === "string" ||
         typeof value === "number" ||
         typeof value === "boolean"
       ) {
-        // Verifica se o valor é um tipo primitivo aceito
         return `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`
       }
       throw new Error(`Unsupported query parameter value: ${key}=${value}`)
