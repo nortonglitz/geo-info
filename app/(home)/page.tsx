@@ -1,10 +1,18 @@
 "use client"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { List } from "./List"
 import { debounce } from "@/libs/debounce"
 
 export default function Home() {
   const [query, setQuery] = useState("")
+
+  useEffect(() => {
+    const trackVisitor = async () => {
+      await fetch("/api/visitor-tracker", { method: "POST" })
+    }
+
+    trackVisitor()
+  }, [])
 
   const debouncedQueryFunction = debounce((value: string) => {
     setQuery(value)
