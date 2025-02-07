@@ -1,17 +1,16 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const debounce = <T extends (...args: any[]) => unknown>(
-  fc: T,
-  timer: number
-): ((...args: Parameters<T>) => void) => {
-  let timeout: NodeJS.Timeout | null = null
+export const debounce = <T extends (...args: any[]) => any>(fc: T, timer: number) => {
+  let timeout: NodeJS.Timeout | undefined
 
-  return (...args: Parameters<T>): void => {
-    if (timeout) {
-      clearTimeout(timeout)
-    }
+  const debouncedFunction = (...args: Parameters<T>): ReturnType<T> | void => {
+    if (timeout) clearTimeout(timeout)
 
-    timeout = setTimeout(() => {
-      fc(...args)
-    }, timer)
+    timeout = setTimeout(() => fc(...args), timer)
   }
+
+  debouncedFunction.cancel = () => {
+    if (timeout) clearTimeout(timeout)
+  }
+
+  return debouncedFunction
 }
